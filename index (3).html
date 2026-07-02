@@ -1,0 +1,869 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>will you? 💌</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+<style>
+  :root{
+    --pink-50:#fff5f8;
+    --pink-100:#ffe4ee;
+    --pink-200:#ffc2dd;
+    --pink-400:#ff8fc0;
+    --pink-500:#ff6bab;
+    --pink-600:#f0428c;
+    --peach:#ffd9c2;
+    --lilac:#e3d4ff;
+    --mint:#c8f5e0;
+    --ink:#5b3a52;
+  }
+  html,body{
+    height:100%;
+    font-family:'Quicksand', sans-serif;
+    color:var(--ink);
+    background:
+      radial-gradient(circle at 15% 20%, var(--pink-100), transparent 45%),
+      radial-gradient(circle at 85% 15%, var(--lilac), transparent 40%),
+      radial-gradient(circle at 80% 85%, var(--mint), transparent 45%),
+      radial-gradient(circle at 10% 90%, var(--peach), transparent 40%),
+      var(--pink-50);
+    overflow-x:hidden;
+  }
+  .font-display{ font-family:'Fredoka', sans-serif; }
+
+  @media (prefers-reduced-motion: reduce){
+    *{ animation-duration:0.001ms !important; animation-iteration-count:1 !important; transition-duration:0.001ms !important; }
+  }
+
+  /* ---------- floating hearts background ---------- */
+  #heart-field{ position:fixed; inset:0; pointer-events:none; z-index:0; overflow:hidden; }
+  .bg-heart{
+    position:absolute;
+    bottom:-10%;
+    opacity:0.55;
+    animation-name:floatUp;
+    animation-timing-function:ease-in;
+    animation-iteration-count:infinite;
+    filter:drop-shadow(0 2px 6px rgba(255,107,171,0.25));
+  }
+  @keyframes floatUp{
+    0%{ transform:translateY(0) translateX(0) rotate(0deg); opacity:0; }
+    10%{ opacity:0.6; }
+    50%{ transform:translateY(-55vh) translateX(20px) rotate(15deg); }
+    90%{ opacity:0.5; }
+    100%{ transform:translateY(-110vh) translateX(-15px) rotate(-10deg); opacity:0; }
+  }
+
+  /* ---------- card shell ---------- */
+  .stage-card{
+    background:rgba(255,255,255,0.72);
+    backdrop-filter:blur(18px);
+    -webkit-backdrop-filter:blur(18px);
+    border:1px solid rgba(255,255,255,0.9);
+    box-shadow:0 20px 60px -15px rgba(240,66,140,0.35), 0 2px 8px rgba(240,66,140,0.08);
+  }
+
+  /* ---------- step transitions ---------- */
+  .step{
+    display:none;
+  }
+  .step.active{
+    display:block;
+    animation:popIn 0.55s cubic-bezier(.34,1.56,.64,1) both;
+  }
+  @keyframes popIn{
+    0%{ opacity:0; transform:scale(0.85) translateY(18px); }
+    100%{ opacity:1; transform:scale(1) translateY(0); }
+  }
+  .step.leaving{
+    animation:popOut 0.35s ease-in both;
+  }
+  @keyframes popOut{
+    to{ opacity:0; transform:scale(0.92) translateY(-10px); }
+  }
+
+  /* ---------- yes button ---------- */
+  .btn-yes{
+    background:linear-gradient(135deg, var(--pink-500), var(--pink-600));
+    box-shadow:0 10px 25px -5px rgba(240,66,140,0.55), inset 0 1px 0 rgba(255,255,255,0.4);
+    transition:transform .18s ease, box-shadow .18s ease;
+  }
+  .btn-yes:hover{ transform:translateY(-3px) scale(1.04); box-shadow:0 16px 32px -6px rgba(240,66,140,0.6); }
+  .btn-yes:active{ transform:translateY(0) scale(0.97); }
+  .btn-yes.grow{ transform:scale(var(--grow, 1)); }
+
+  /* ---------- no button (runaway) ---------- */
+  #noBtn{
+    transition:transform .25s cubic-bezier(.34,1.2,.64,1), left .25s cubic-bezier(.34,1.2,.64,1), top .25s cubic-bezier(.34,1.2,.64,1);
+  }
+
+  /* ---------- choice cards ---------- */
+  .choice-card{
+    background:#fff;
+    border:2.5px solid var(--pink-100);
+    transition:all .2s cubic-bezier(.34,1.56,.64,1);
+  }
+  .choice-card:hover{
+    border-color:var(--pink-400);
+    transform:translateY(-6px) rotate(-1deg);
+    box-shadow:0 14px 28px -8px rgba(240,66,140,0.35);
+  }
+  .choice-card.selected{
+    border-color:var(--pink-600);
+    background:linear-gradient(135deg, var(--pink-50), var(--pink-100));
+    transform:translateY(-4px) scale(1.02);
+    box-shadow:0 14px 28px -8px rgba(240,66,140,0.4);
+  }
+  .choice-card.selected .check-badge{ opacity:1; transform:scale(1); }
+  .check-badge{ opacity:0; transform:scale(0.5); transition:all .25s cubic-bezier(.34,1.56,.64,1); }
+
+  /* ---------- progress dots ---------- */
+  .dot{ width:8px; height:8px; border-radius:999px; background:var(--pink-200); transition:all .3s ease; }
+  .dot.active{ width:26px; background:var(--pink-600); }
+  .dot.done{ background:var(--pink-500); }
+
+  /* ---------- love note ---------- */
+  .love-paper{
+    background:
+      repeating-linear-gradient(transparent, transparent 34px, rgba(240,66,140,0.15) 35px),
+      #fffdf9;
+    border:1px solid var(--pink-200);
+    box-shadow: inset 0 0 0 1px rgba(255,255,255,0.5), 0 6px 20px -8px rgba(240,66,140,0.25);
+    line-height:35px;
+    background-position: 0 6px;
+  }
+
+  /* ---------- final button ---------- */
+  .btn-finale{
+    background:linear-gradient(135deg,#ff8fc0,#c9a8ff 60%,#ff6bab);
+    background-size:200% 200%;
+    animation:shimmer 3s ease infinite;
+    box-shadow:0 14px 30px -8px rgba(200,90,220,0.55);
+  }
+  @keyframes shimmer{
+    0%,100%{ background-position:0% 50%; }
+    50%{ background-position:100% 50%; }
+  }
+
+  /* ---------- confetti ---------- */
+  .confetti-piece{ position:fixed; top:-5%; z-index:60; pointer-events:none; border-radius:2px; }
+
+  /* ---------- misc ---------- */
+  .wiggle-hover:hover{ animation:wiggle .4s ease; }
+  @keyframes wiggle{ 0%,100%{transform:rotate(0)} 25%{transform:rotate(-6deg)} 75%{transform:rotate(6deg)} }
+
+  .spinner{
+    border:3px solid var(--pink-100);
+    border-top-color:var(--pink-600);
+    border-radius:50%;
+    animation:spin 0.8s linear infinite;
+  }
+  @keyframes spin{ to{ transform:rotate(360deg); } }
+
+  input[type="radio"]{ accent-color: var(--pink-600); }
+
+  ::selection{ background:var(--pink-200); }
+
+  /* scrollbar cute-ify */
+  ::-webkit-scrollbar{ width:10px; }
+  ::-webkit-scrollbar-track{ background:var(--pink-50); }
+  ::-webkit-scrollbar-thumb{ background:var(--pink-300, var(--pink-400)); border-radius:99px; }
+</style>
+</head>
+<body class="min-h-screen relative">
+
+  <!-- floating hearts -->
+  <div id="heart-field"></div>
+
+  <!-- secret settings trigger: press "S" five times, or tap logo 5x on mobile -->
+  <button id="secretDot" title="" aria-hidden="true"
+    class="fixed bottom-3 right-3 w-3 h-3 rounded-full bg-pink-200/40 hover:bg-pink-300/60 z-50"></button>
+
+  <!-- ============= SETTINGS MODAL (sender-only) ============= -->
+  <div id="settingsModal" class="fixed inset-0 z-[70] hidden items-center justify-center bg-[#5b3a52]/50 backdrop-blur-sm p-4">
+    <div class="stage-card rounded-3xl max-w-md w-full p-6 relative">
+      <button id="closeSettings" class="absolute top-4 right-4 text-pink-400 hover:text-pink-600 text-xl"><i class="fa-solid fa-xmark"></i></button>
+      <h2 class="font-display text-2xl text-pink-600 mb-1">⚙️ delivery settings</h2>
+      <p class="text-sm text-[var(--ink)]/70 mb-4">This is just for you (the sender). It's saved only in <b>this browser's</b> storage — never in the page's code, and never sent anywhere except GitHub when your partner hits submit.</p>
+
+      <label class="block text-sm font-semibold mb-1">GitHub repo (owner/name)</label>
+      <input id="cfgRepo" type="text" placeholder="yourname/date-answers"
+        class="w-full mb-3 px-4 py-2.5 rounded-xl border-2 border-pink-100 focus:border-pink-400 outline-none text-sm">
+
+      <label class="block text-sm font-semibold mb-1">File path in repo</label>
+      <input id="cfgPath" type="text" placeholder="responses.json"
+        class="w-full mb-3 px-4 py-2.5 rounded-xl border-2 border-pink-100 focus:border-pink-400 outline-none text-sm">
+
+      <label class="block text-sm font-semibold mb-1">Branch</label>
+      <input id="cfgBranch" type="text" placeholder="main"
+        class="w-full mb-3 px-4 py-2.5 rounded-xl border-2 border-pink-100 focus:border-pink-400 outline-none text-sm">
+
+      <label class="block text-sm font-semibold mb-1">Personal Access Token</label>
+      <input id="cfgToken" type="password" placeholder="github_pat_..."
+        class="w-full mb-2 px-4 py-2.5 rounded-xl border-2 border-pink-100 focus:border-pink-400 outline-none text-sm">
+      <p class="text-xs text-[var(--ink)]/60 mb-4">
+        Use a <b>fine-grained token</b> scoped to only this repo, with only "Contents: Read and write" permission.
+        Anyone with your browser's local storage or dev tools could read this — don't use this settings page on a shared or public computer.
+      </p>
+
+      <div class="flex gap-2">
+        <button id="saveSettings" class="flex-1 bg-pink-600 hover:bg-pink-700 text-white font-semibold py-2.5 rounded-xl transition">Save to this browser</button>
+        <button id="clearSettings" class="px-4 py-2.5 rounded-xl border-2 border-pink-200 text-pink-600 hover:bg-pink-50 transition text-sm">Clear</button>
+      </div>
+      <p id="settingsStatus" class="text-xs mt-3 text-emerald-600 h-4"></p>
+    </div>
+  </div>
+
+  <!-- ============= MAIN APP ============= -->
+  <main class="relative z-10 min-h-screen flex flex-col items-center justify-center px-4 py-10">
+
+    <!-- progress dots -->
+    <div id="progress" class="flex gap-2 mb-6 items-center">
+      <span class="dot" data-dot="1"></span>
+      <span class="dot" data-dot="2"></span>
+      <span class="dot" data-dot="3"></span>
+      <span class="dot" data-dot="4"></span>
+      <span class="dot" data-dot="5"></span>
+      <span class="dot" data-dot="6"></span>
+    </div>
+
+    <div class="stage-card rounded-[2rem] w-full max-w-lg p-7 sm:p-10 relative overflow-visible" id="cardWrap">
+
+      <!-- STEP 1 : the big question -->
+      <section class="step active" data-step="1">
+        <div class="text-center relative" style="min-height:340px;">
+          <div class="text-6xl mb-3 animate-bounce" style="animation-duration:2.2s;">🥺</div>
+          <h1 class="font-display text-3xl sm:text-4xl text-pink-600 mb-2 leading-snug">Will you go on<br>a date with me?</h1>
+          <p class="text-[var(--ink)]/70 mb-10">no pressure, but the correct answer is on the left 👀</p>
+
+          <div class="relative flex items-center justify-center gap-5" style="height:70px;">
+            <button id="yesBtn" class="btn-yes text-white font-display text-lg px-8 py-4 rounded-full whitespace-nowrap">
+              Yes, absolutely! 💖
+            </button>
+            <button id="noBtn" class="absolute font-display text-lg px-8 py-4 rounded-full bg-white border-2 border-pink-200 text-pink-400 whitespace-nowrap"
+              style="left:calc(50% + 95px);">
+              No
+            </button>
+          </div>
+          <p id="noHint" class="text-xs text-pink-400 mt-24 opacity-0 transition-opacity">it's okay, it happens to everyone 🙈</p>
+        </div>
+      </section>
+
+      <!-- STEP 2 : location -->
+      <section class="step" data-step="2">
+        <h2 class="font-display text-2xl text-pink-600 text-center mb-1">Where should we go? 🗺️</h2>
+        <p class="text-center text-[var(--ink)]/60 text-sm mb-6">pick whatever sounds the most like us</p>
+        <div class="grid grid-cols-2 gap-3 mb-4" id="locationGrid">
+          <button class="choice-card rounded-2xl p-4 text-center relative" data-value="Cozy cafe ☕">
+            <span class="check-badge absolute top-2 right-2 text-pink-600"><i class="fa-solid fa-circle-check"></i></span>
+            <div class="text-3xl mb-2">☕</div>
+            <div class="font-semibold text-sm">Cozy cafe</div>
+          </button>
+          <button class="choice-card rounded-2xl p-4 text-center relative" data-value="Nice restaurant 🍝">
+            <span class="check-badge absolute top-2 right-2 text-pink-600"><i class="fa-solid fa-circle-check"></i></span>
+            <div class="text-3xl mb-2">🍝</div>
+            <div class="font-semibold text-sm">Restaurant</div>
+          </button>
+          <button class="choice-card rounded-2xl p-4 text-center relative" data-value="Walk in the park 🌳">
+            <span class="check-badge absolute top-2 right-2 text-pink-600"><i class="fa-solid fa-circle-check"></i></span>
+            <div class="text-3xl mb-2">🌳</div>
+            <div class="font-semibold text-sm">Park walk</div>
+          </button>
+          <button class="choice-card rounded-2xl p-4 text-center relative" data-value="__custom__">
+            <span class="check-badge absolute top-2 right-2 text-pink-600"><i class="fa-solid fa-circle-check"></i></span>
+            <div class="text-3xl mb-2">✨</div>
+            <div class="font-semibold text-sm">Surprise me</div>
+          </button>
+        </div>
+        <input id="locationCustom" type="text" placeholder="type your own idea..."
+          class="w-full hidden mb-4 px-4 py-2.5 rounded-xl border-2 border-pink-100 focus:border-pink-400 outline-none text-sm">
+        <div class="flex justify-between items-center mt-6">
+          <button class="back-btn text-pink-400 text-sm font-semibold hover:text-pink-600" data-back="1"><i class="fa-solid fa-arrow-left mr-1"></i>back</button>
+          <button class="next-btn bg-pink-600 hover:bg-pink-700 text-white font-semibold px-6 py-2.5 rounded-full transition disabled:opacity-40 disabled:pointer-events-none" data-next="3" disabled>next <i class="fa-solid fa-arrow-right ml-1"></i></button>
+        </div>
+      </section>
+
+      <!-- STEP 3 : day -->
+      <section class="step" data-step="3">
+        <h2 class="font-display text-2xl text-pink-600 text-center mb-1">Which day? 📅</h2>
+        <p class="text-center text-[var(--ink)]/60 text-sm mb-6">whenever works for your heart</p>
+        <div class="grid grid-cols-1 gap-3 mb-4" id="dayGrid">
+          <button class="choice-card rounded-2xl p-4 text-left relative flex items-center gap-3" data-value="This weekend 🌞">
+            <span class="text-2xl">🌞</span>
+            <div>
+              <div class="font-semibold text-sm">This weekend</div>
+              <div class="text-xs text-[var(--ink)]/50">Sat or Sun, whatever's freer</div>
+            </div>
+            <span class="check-badge ml-auto text-pink-600"><i class="fa-solid fa-circle-check"></i></span>
+          </button>
+          <button class="choice-card rounded-2xl p-4 text-left relative flex items-center gap-3" data-value="A weekday evening 🌆">
+            <span class="text-2xl">🌆</span>
+            <div>
+              <div class="font-semibold text-sm">A weekday evening</div>
+              <div class="text-xs text-[var(--ink)]/50">low-key, after work</div>
+            </div>
+            <span class="check-badge ml-auto text-pink-600"><i class="fa-solid fa-circle-check"></i></span>
+          </button>
+          <button class="choice-card rounded-2xl p-4 text-left relative flex items-center gap-3" data-value="__pick__">
+            <span class="text-2xl">🗓️</span>
+            <div>
+              <div class="font-semibold text-sm">Let me pick a date</div>
+              <div class="text-xs text-[var(--ink)]/50">specific day</div>
+            </div>
+            <span class="check-badge ml-auto text-pink-600"><i class="fa-solid fa-circle-check"></i></span>
+          </button>
+        </div>
+        <input id="dayCustom" type="date" class="w-full hidden mb-4 px-4 py-2.5 rounded-xl border-2 border-pink-100 focus:border-pink-400 outline-none text-sm">
+        <div class="flex justify-between items-center mt-6">
+          <button class="back-btn text-pink-400 text-sm font-semibold hover:text-pink-600" data-back="2"><i class="fa-solid fa-arrow-left mr-1"></i>back</button>
+          <button class="next-btn bg-pink-600 hover:bg-pink-700 text-white font-semibold px-6 py-2.5 rounded-full transition disabled:opacity-40 disabled:pointer-events-none" data-next="4" disabled>next <i class="fa-solid fa-arrow-right ml-1"></i></button>
+        </div>
+      </section>
+
+      <!-- STEP 4 : time -->
+      <section class="step" data-step="4">
+        <h2 class="font-display text-2xl text-pink-600 text-center mb-1">What time? ⏰</h2>
+        <p class="text-center text-[var(--ink)]/60 text-sm mb-6">pick a vibe</p>
+        <div class="grid grid-cols-3 gap-3 mb-4" id="timeGrid">
+          <button class="choice-card rounded-2xl p-4 text-center relative" data-value="Afternoon coffee ☀️">
+            <span class="check-badge absolute top-2 right-2 text-pink-600"><i class="fa-solid fa-circle-check"></i></span>
+            <div class="text-2xl mb-1">☀️</div>
+            <div class="font-semibold text-xs">Afternoon<br>coffee</div>
+          </button>
+          <button class="choice-card rounded-2xl p-4 text-center relative" data-value="Sunset walk 🌇">
+            <span class="check-badge absolute top-2 right-2 text-pink-600"><i class="fa-solid fa-circle-check"></i></span>
+            <div class="text-2xl mb-1">🌇</div>
+            <div class="font-semibold text-xs">Sunset<br>walk</div>
+          </button>
+          <button class="choice-card rounded-2xl p-4 text-center relative" data-value="Dinner time 🌙">
+            <span class="check-badge absolute top-2 right-2 text-pink-600"><i class="fa-solid fa-circle-check"></i></span>
+            <div class="text-2xl mb-1">🌙</div>
+            <div class="font-semibold text-xs">Dinner<br>time</div>
+          </button>
+        </div>
+        <div class="flex items-center justify-center gap-2 mb-2">
+          <span class="text-xs text-[var(--ink)]/50">or set exact time:</span>
+          <input id="timeCustom" type="time" class="px-3 py-1.5 rounded-lg border-2 border-pink-100 focus:border-pink-400 outline-none text-sm">
+        </div>
+        <div class="flex justify-between items-center mt-6">
+          <button class="back-btn text-pink-400 text-sm font-semibold hover:text-pink-600" data-back="3"><i class="fa-solid fa-arrow-left mr-1"></i>back</button>
+          <button class="next-btn bg-pink-600 hover:bg-pink-700 text-white font-semibold px-6 py-2.5 rounded-full transition disabled:opacity-40 disabled:pointer-events-none" data-next="5" disabled>next <i class="fa-solid fa-arrow-right ml-1"></i></button>
+        </div>
+      </section>
+
+      <!-- STEP 5 : love note -->
+      <section class="step" data-step="5">
+        <h2 class="font-display text-2xl text-pink-600 text-center mb-1">One more thing 💌</h2>
+        <p class="text-center text-[var(--ink)]/60 text-sm mb-5">write me a little something (optional, but I'll definitely read it twice)</p>
+        <textarea id="loveNote" rows="5" placeholder="Dear you..."
+          class="love-paper w-full rounded-xl p-4 text-sm outline-none focus:ring-2 focus:ring-pink-300 resize-none font-display"></textarea>
+        <div class="flex justify-between items-center mt-6">
+          <button class="back-btn text-pink-400 text-sm font-semibold hover:text-pink-600" data-back="4"><i class="fa-solid fa-arrow-left mr-1"></i>back</button>
+          <button class="next-btn bg-pink-600 hover:bg-pink-700 text-white font-semibold px-6 py-2.5 rounded-full transition" data-next="6">next <i class="fa-solid fa-arrow-right ml-1"></i></button>
+        </div>
+      </section>
+
+      <!-- STEP 6 : review + submit -->
+      <section class="step" data-step="6">
+        <h2 class="font-display text-2xl text-pink-600 text-center mb-1">Ready to send? 🦄</h2>
+        <p class="text-center text-[var(--ink)]/60 text-sm mb-5">here's what I'm about to receive</p>
+
+        <div class="bg-pink-50/80 rounded-2xl p-4 text-sm space-y-2 mb-6 border-2 border-pink-100" id="reviewBox">
+          <!-- filled by JS -->
+        </div>
+
+        <button id="submitBtn" class="btn-finale w-full text-white font-display text-lg py-4 rounded-full flex items-center justify-center gap-2">
+          <i class="fa-solid fa-wand-magic-sparkles"></i> Send to my heart!
+        </button>
+        <button class="back-btn text-pink-400 text-sm font-semibold hover:text-pink-600 mt-4 block mx-auto" data-back="5"><i class="fa-solid fa-arrow-left mr-1"></i>back</button>
+
+        <!-- sending state -->
+        <div id="sendingState" class="hidden text-center py-6">
+          <div class="spinner w-10 h-10 mx-auto mb-3"></div>
+          <p class="text-pink-500 text-sm">sending it with love...</p>
+        </div>
+
+        <!-- error state -->
+        <div id="errorState" class="hidden text-center py-4 bg-red-50 border-2 border-red-100 rounded-2xl mt-4 px-4">
+          <p class="text-red-500 text-sm font-semibold mb-1">Hmm, that didn't send 😢</p>
+          <p id="errorDetail" class="text-red-400 text-xs mb-3"></p>
+          <button id="retryBtn" class="text-red-500 text-sm font-semibold underline">try again</button>
+        </div>
+      </section>
+
+      <!-- STEP 7 (visually) : success -->
+      <section class="step" data-step="7">
+        <div class="text-center py-4">
+          <div class="text-7xl mb-4">🦄</div>
+          <h2 class="font-display text-3xl text-pink-600 mb-2">Can't wait, gorgeous!</h2>
+          <p class="text-[var(--ink)]/70">Your answers have been sent to me 🦄✨<br>See you soon 💖</p>
+        </div>
+      </section>
+
+    </div>
+
+    <p class="text-center text-xs text-[var(--ink)]/40 mt-6">made with 💗 just for you</p>
+  </main>
+
+<script>
+(function(){
+  "use strict";
+
+  /* ============================================================
+     FLOATING HEARTS BACKGROUND
+  ============================================================ */
+  const heartField = document.getElementById('heart-field');
+  const heartEmojis = ['💗','💕','💖','💓','✨'];
+  function spawnHeart(){
+    const el = document.createElement('div');
+    el.className = 'bg-heart';
+    el.textContent = heartEmojis[Math.floor(Math.random()*heartEmojis.length)];
+    const size = 14 + Math.random()*22;
+    el.style.fontSize = size + 'px';
+    el.style.left = Math.random()*100 + 'vw';
+    const duration = 9 + Math.random()*8;
+    el.style.animationDuration = duration + 's';
+    el.style.animationDelay = (Math.random()*2) + 's';
+    heartField.appendChild(el);
+    setTimeout(()=> el.remove(), (duration+2.5)*1000);
+  }
+  for(let i=0;i<10;i++) setTimeout(spawnHeart, i*400);
+  setInterval(spawnHeart, 1400);
+
+  /* ============================================================
+     STATE
+  ============================================================ */
+  const state = {
+    location: null,
+    day: null,
+    time: null,
+    note: ''
+  };
+  let currentStep = 1;
+
+  const steps = document.querySelectorAll('.step');
+  const dots = document.querySelectorAll('.dot');
+
+  function updateDots(n){
+    dots.forEach(d=>{
+      const i = parseInt(d.dataset.dot,10);
+      d.classList.toggle('active', i===n);
+      d.classList.toggle('done', i<n);
+    });
+  }
+
+  function goToStep(n){
+    const current = document.querySelector('.step.active');
+    const next = document.querySelector(`.step[data-step="${n}"]`);
+    if(!next) return;
+    if(current){
+      current.classList.add('leaving');
+      setTimeout(()=>{
+        current.classList.remove('active','leaving');
+        next.classList.add('active');
+        currentStep = n;
+        updateDots(Math.min(n,6));
+      }, 300);
+    } else {
+      next.classList.add('active');
+      currentStep = n;
+      updateDots(n);
+    }
+  }
+
+  document.querySelectorAll('.next-btn').forEach(btn=>{
+    btn.addEventListener('click', ()=> goToStep(parseInt(btn.dataset.next,10)));
+  });
+  document.querySelectorAll('.back-btn').forEach(btn=>{
+    btn.addEventListener('click', ()=> goToStep(parseInt(btn.dataset.back,10)));
+  });
+
+  /* ============================================================
+     STEP 1 — runaway "No" button + confetti "Yes"
+  ============================================================ */
+  const noBtn = document.getElementById('noBtn');
+  const yesBtn = document.getElementById('yesBtn');
+  const noHint = document.getElementById('noHint');
+  const cardWrap = document.getElementById('cardWrap');
+  let noDodges = 0;
+
+  function fleeNoButton(){
+    noDodges++;
+    const wrap = cardWrap.getBoundingClientRect();
+    const btnW = noBtn.offsetWidth, btnH = noBtn.offsetHeight;
+    const pad = 16;
+    const maxX = Math.max(wrap.width - btnW - pad, pad);
+    const maxY = Math.max(wrap.height - btnH - pad, pad);
+    const x = pad + Math.random()*maxX;
+    const y = pad + Math.random()*maxY;
+    noBtn.style.left = x + 'px';
+    noBtn.style.top = y + 'px';
+    noBtn.style.position = 'absolute';
+
+    // shrink slightly each time it's chased, down to a floor, for extra charm
+    const scale = Math.max(0.55, 1 - noDodges*0.04);
+    noBtn.style.transform = `scale(${scale}) rotate(${(Math.random()*30-15)}deg)`;
+
+    if(noDodges >= 3){
+      noHint.style.opacity = '1';
+    }
+    // grow the yes button a touch each dodge, playful reinforcement
+    const growAmt = Math.min(1.15, 1 + noDodges*0.02);
+    yesBtn.style.setProperty('--grow', growAmt);
+    yesBtn.style.transform = `scale(${growAmt})`;
+  }
+  noBtn.addEventListener('mouseenter', fleeNoButton);
+  noBtn.addEventListener('touchstart', (e)=>{ e.preventDefault(); fleeNoButton(); }, {passive:false});
+  noBtn.addEventListener('click', (e)=>{ e.preventDefault(); fleeNoButton(); });
+  // also flee if the mouse merely gets close, for extra evasiveness
+  cardWrap.addEventListener('mousemove', (e)=>{
+    const r = noBtn.getBoundingClientRect();
+    const cx = r.left + r.width/2, cy = r.top + r.height/2;
+    const dist = Math.hypot(e.clientX-cx, e.clientY-cy);
+    if(dist < 70) fleeNoButton();
+  });
+
+  yesBtn.addEventListener('click', ()=>{
+    burstConfetti();
+    setTimeout(()=> goToStep(2), 450);
+  });
+
+  /* ============================================================
+     CONFETTI
+  ============================================================ */
+  function burstConfetti(){
+    const colors = ['#ff6bab','#ff8fc0','#ffd9c2','#e3d4ff','#c8f5e0','#f0428c'];
+    const count = 90;
+    for(let i=0;i<count;i++){
+      const piece = document.createElement('div');
+      piece.className = 'confetti-piece';
+      const isCircle = Math.random() > 0.5;
+      const size = 6 + Math.random()*8;
+      piece.style.width = size + 'px';
+      piece.style.height = (isCircle? size : size*2.2) + 'px';
+      piece.style.background = colors[Math.floor(Math.random()*colors.length)];
+      if(isCircle) piece.style.borderRadius = '50%';
+      piece.style.left = Math.random()*100 + 'vw';
+      const fallDuration = 2.2 + Math.random()*1.6;
+      const drift = (Math.random()*200-100);
+      const rotateEnd = (Math.random()*720-360);
+      piece.animate([
+        { transform:`translate(0,0) rotate(0deg)`, opacity:1 },
+        { transform:`translate(${drift}px, 100vh) rotate(${rotateEnd}deg)`, opacity:0.9 }
+      ], { duration: fallDuration*1000, easing:'cubic-bezier(.25,.46,.45,.94)' });
+      document.body.appendChild(piece);
+      setTimeout(()=> piece.remove(), fallDuration*1000+100);
+    }
+  }
+
+  /* ============================================================
+     STEP 2 — location
+  ============================================================ */
+  const locationGrid = document.getElementById('locationGrid');
+  const locationCustom = document.getElementById('locationCustom');
+  const locNextBtn = document.querySelector('.step[data-step="2"] .next-btn');
+
+  locationGrid.addEventListener('click', (e)=>{
+    const card = e.target.closest('.choice-card');
+    if(!card) return;
+    locationGrid.querySelectorAll('.choice-card').forEach(c=>c.classList.remove('selected'));
+    card.classList.add('selected');
+    const val = card.dataset.value;
+    if(val === '__custom__'){
+      locationCustom.classList.remove('hidden');
+      locationCustom.focus();
+      state.location = locationCustom.value.trim();
+    } else {
+      locationCustom.classList.add('hidden');
+      state.location = val;
+    }
+    locNextBtn.disabled = !state.location;
+  });
+  locationCustom.addEventListener('input', ()=>{
+    state.location = locationCustom.value.trim();
+    locNextBtn.disabled = !state.location;
+  });
+
+  /* ============================================================
+     STEP 3 — day
+  ============================================================ */
+  const dayGrid = document.getElementById('dayGrid');
+  const dayCustom = document.getElementById('dayCustom');
+  const dayNextBtn = document.querySelector('.step[data-step="3"] .next-btn');
+
+  dayGrid.addEventListener('click', (e)=>{
+    const card = e.target.closest('.choice-card');
+    if(!card) return;
+    dayGrid.querySelectorAll('.choice-card').forEach(c=>c.classList.remove('selected'));
+    card.classList.add('selected');
+    const val = card.dataset.value;
+    if(val === '__pick__'){
+      dayCustom.classList.remove('hidden');
+      dayCustom.focus();
+      state.day = dayCustom.value ? formatDate(dayCustom.value) : '';
+    } else {
+      dayCustom.classList.add('hidden');
+      state.day = val;
+    }
+    dayNextBtn.disabled = !state.day;
+  });
+  dayCustom.addEventListener('input', ()=>{
+    state.day = dayCustom.value ? formatDate(dayCustom.value) : '';
+    dayNextBtn.disabled = !state.day;
+  });
+  function formatDate(iso){
+    const d = new Date(iso + 'T00:00:00');
+    return d.toLocaleDateString(undefined, { weekday:'long', month:'long', day:'numeric' }) + ' 🗓️';
+  }
+
+  /* ============================================================
+     STEP 4 — time
+  ============================================================ */
+  const timeGrid = document.getElementById('timeGrid');
+  const timeCustom = document.getElementById('timeCustom');
+  const timeNextBtn = document.querySelector('.step[data-step="4"] .next-btn');
+
+  timeGrid.addEventListener('click', (e)=>{
+    const card = e.target.closest('.choice-card');
+    if(!card) return;
+    timeGrid.querySelectorAll('.choice-card').forEach(c=>c.classList.remove('selected'));
+    card.classList.add('selected');
+    state.time = card.dataset.value;
+    timeCustom.value = '';
+    timeNextBtn.disabled = !state.time;
+  });
+  timeCustom.addEventListener('input', ()=>{
+    if(timeCustom.value){
+      timeGrid.querySelectorAll('.choice-card').forEach(c=>c.classList.remove('selected'));
+      state.time = formatTime(timeCustom.value) + ' ⏰';
+    } else {
+      state.time = null;
+    }
+    timeNextBtn.disabled = !state.time;
+  });
+  function formatTime(t){
+    const [h,m] = t.split(':').map(Number);
+    const period = h >= 12 ? 'PM' : 'AM';
+    const h12 = ((h+11)%12)+1;
+    return `${h12}:${String(m).padStart(2,'0')} ${period}`;
+  }
+
+  /* ============================================================
+     STEP 5 — love note
+  ============================================================ */
+  const loveNote = document.getElementById('loveNote');
+  loveNote.addEventListener('input', ()=>{ state.note = loveNote.value; });
+
+  /* ============================================================
+     STEP 6 — review + submit
+  ============================================================ */
+  const reviewBox = document.getElementById('reviewBox');
+  const submitBtn = document.getElementById('submitBtn');
+  const sendingState = document.getElementById('sendingState');
+  const errorState = document.getElementById('errorState');
+  const errorDetail = document.getElementById('errorDetail');
+  const retryBtn = document.getElementById('retryBtn');
+
+  document.querySelector('.step[data-step="6"]').addEventListener('transitionstartfake', ()=>{});
+  // rebuild review each time we land on step 6
+  const observer = new MutationObserver(()=>{
+    const step6 = document.querySelector('.step[data-step="6"]');
+    if(step6.classList.contains('active')) renderReview();
+  });
+  observer.observe(document.querySelector('.step[data-step="6"]'), { attributes:true, attributeFilter:['class'] });
+
+  function renderReview(){
+    reviewBox.innerHTML = `
+      <div class="flex items-center gap-2"><i class="fa-solid fa-location-dot text-pink-500 w-4"></i><span class="font-semibold">Where:</span> ${escapeHtml(state.location||'—')}</div>
+      <div class="flex items-center gap-2"><i class="fa-solid fa-calendar-heart text-pink-500 w-4"></i><span class="font-semibold">Day:</span> ${escapeHtml(state.day||'—')}</div>
+      <div class="flex items-center gap-2"><i class="fa-solid fa-clock text-pink-500 w-4"></i><span class="font-semibold">Time:</span> ${escapeHtml(state.time||'—')}</div>
+      ${state.note ? `<div class="pt-2 border-t border-pink-100"><span class="font-semibold"><i class="fa-solid fa-envelope text-pink-500 w-4 mr-1"></i>Note:</span><br><span class="italic">"${escapeHtml(state.note)}"</span></div>` : ''}
+    `;
+  }
+  function escapeHtml(str){
+    return String(str).replace(/[&<>"']/g, s=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[s]));
+  }
+
+  /* ============================================================
+     GITHUB SUBMISSION
+  ============================================================ */
+  const CFG_KEY = 'dateAppConfig_v1';
+  function getConfig(){
+    try{ return JSON.parse(localStorage.getItem(CFG_KEY) || '{}'); }
+    catch(e){ return {}; }
+  }
+
+  async function submitToGitHub(){
+    const cfg = getConfig();
+    if(!cfg.repo || !cfg.token || !cfg.path){
+      showError('This link isn\'t fully set up yet. The sender needs to open settings and add their repo + token.');
+      return;
+    }
+    const branch = cfg.branch || 'main';
+    const apiUrl = `https://api.github.com/repos/${cfg.repo}/contents/${encodeURIComponent(cfg.path)}`;
+
+    submitBtn.classList.add('hidden');
+    sendingState.classList.remove('hidden');
+    errorState.classList.add('hidden');
+
+    const newEntry = {
+      location: state.location,
+      day: state.day,
+      time: state.time,
+      note: state.note,
+      submittedAt: new Date().toISOString()
+    };
+
+    try{
+      // 1. try to fetch existing file to get its sha + current contents
+      let existingArray = [];
+      let sha = undefined;
+      const getRes = await fetch(`${apiUrl}?ref=${encodeURIComponent(branch)}`, {
+        headers:{
+          'Authorization': `Bearer ${cfg.token}`,
+          'Accept':'application/vnd.github+json'
+        }
+      });
+
+      if(getRes.status === 200){
+        const fileData = await getRes.json();
+        sha = fileData.sha;
+        try{
+          const decoded = decodeURIComponent(escape(atob(fileData.content.replace(/\n/g,''))));
+          const parsed = JSON.parse(decoded);
+          existingArray = Array.isArray(parsed) ? parsed : [parsed];
+        }catch(e){
+          existingArray = [];
+        }
+      } else if(getRes.status !== 404){
+        const errBody = await safeJson(getRes);
+        throw new Error(errBody?.message || `GitHub returned ${getRes.status}`);
+      }
+
+      existingArray.push(newEntry);
+      const newContent = JSON.stringify(existingArray, null, 2);
+      const encodedContent = btoa(unescape(encodeURIComponent(newContent)));
+
+      const putBody = {
+        message: `💌 new date response — ${new Date().toLocaleString()}`,
+        content: encodedContent,
+        branch: branch
+      };
+      if(sha) putBody.sha = sha;
+
+      const putRes = await fetch(apiUrl, {
+        method:'PUT',
+        headers:{
+          'Authorization': `Bearer ${cfg.token}`,
+          'Accept':'application/vnd.github+json',
+          'Content-Type':'application/json'
+        },
+        body: JSON.stringify(putBody)
+      });
+
+      if(!putRes.ok){
+        const errBody = await safeJson(putRes);
+        throw new Error(errBody?.message || `GitHub returned ${putRes.status}`);
+      }
+
+      // success!
+      sendingState.classList.add('hidden');
+      goToStep(7);
+
+    }catch(err){
+      console.error(err);
+      showError(err.message || 'Something went wrong talking to GitHub.');
+    }
+  }
+
+  async function safeJson(res){
+    try{ return await res.json(); }catch(e){ return null; }
+  }
+
+  function showError(msg){
+    sendingState.classList.add('hidden');
+    submitBtn.classList.remove('hidden');
+    errorState.classList.remove('hidden');
+    errorDetail.textContent = msg;
+  }
+
+  submitBtn.addEventListener('click', submitToGitHub);
+  retryBtn.addEventListener('click', submitToGitHub);
+
+  /* ============================================================
+     SECRET SETTINGS MODAL (sender only)
+  ============================================================ */
+  const settingsModal = document.getElementById('settingsModal');
+  const secretDot = document.getElementById('secretDot');
+  const closeSettings = document.getElementById('closeSettings');
+  const saveSettings = document.getElementById('saveSettings');
+  const clearSettings = document.getElementById('clearSettings');
+  const settingsStatus = document.getElementById('settingsStatus');
+  const cfgRepo = document.getElementById('cfgRepo');
+  const cfgPath = document.getElementById('cfgPath');
+  const cfgBranch = document.getElementById('cfgBranch');
+  const cfgToken = document.getElementById('cfgToken');
+
+  function openSettings(){
+    const cfg = getConfig();
+    cfgRepo.value = cfg.repo || '';
+    cfgPath.value = cfg.path || 'responses.json';
+    cfgBranch.value = cfg.branch || 'main';
+    cfgToken.value = cfg.token || '';
+    settingsStatus.textContent = '';
+    settingsModal.classList.remove('hidden');
+    settingsModal.classList.add('flex');
+  }
+  function closeSettingsModal(){
+    settingsModal.classList.add('hidden');
+    settingsModal.classList.remove('flex');
+  }
+
+  // trigger: press "s" five times quickly, or tap the tiny dot 5 times
+  let keyTaps = 0, keyTimer = null;
+  window.addEventListener('keydown', (e)=>{
+    if(e.key.toLowerCase() !== 's') return;
+    keyTaps++;
+    clearTimeout(keyTimer);
+    keyTimer = setTimeout(()=> keyTaps = 0, 1200);
+    if(keyTaps >= 5){ keyTaps = 0; openSettings(); }
+  });
+  let dotTaps = 0, dotTimer = null;
+  secretDot.addEventListener('click', ()=>{
+    dotTaps++;
+    clearTimeout(dotTimer);
+    dotTimer = setTimeout(()=> dotTaps = 0, 1200);
+    if(dotTaps >= 5){ dotTaps = 0; openSettings(); }
+  });
+
+  closeSettings.addEventListener('click', closeSettingsModal);
+  settingsModal.addEventListener('click', (e)=>{ if(e.target === settingsModal) closeSettingsModal(); });
+
+  saveSettings.addEventListener('click', ()=>{
+    const cfg = {
+      repo: cfgRepo.value.trim(),
+      path: cfgPath.value.trim() || 'responses.json',
+      branch: cfgBranch.value.trim() || 'main',
+      token: cfgToken.value.trim()
+    };
+    localStorage.setItem(CFG_KEY, JSON.stringify(cfg));
+    settingsStatus.textContent = '✓ saved to this browser';
+    setTimeout(()=>{ settingsStatus.textContent=''; }, 2500);
+  });
+  clearSettings.addEventListener('click', ()=>{
+    localStorage.removeItem(CFG_KEY);
+    cfgRepo.value = ''; cfgPath.value=''; cfgBranch.value=''; cfgToken.value='';
+    settingsStatus.textContent = '✓ cleared';
+    setTimeout(()=>{ settingsStatus.textContent=''; }, 2000);
+  });
+
+})();
+</script>
+</body>
+</html>
