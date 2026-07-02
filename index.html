@@ -696,10 +696,23 @@
   const CFG_KEY = 'dateAppConfig_v1'; // still used as a manual override, see settings modal
   const REMOTE_CONFIG_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRQwgHgBvIpgkVHaKENnJgnwdEYIrUSLqUH7s0_xUWkEx-GcMI_EPUiURR_OrNBA7fED984X6Ygam1I/pub?output=csv';
 
+  function sanitizeConfigValue(v){
+    if(!v) return v;
+    return v
+      // strip BOM, zero-width spaces/joiners, RTL/LTR marks, and other invisible unicode
+      .replace(/[\u200B-\u200F\u202A-\u202E\uFEFF]/g, '')
+      // normalize curly quotes that sheets sometimes auto-inserts
+      .replace(/[\u2018\u2019]/g, "'")
+      .replace(/[\u201C\u201D]/g, '"')
+      // collapse any remaining non-breaking / unusual whitespace to normal space
+      .replace(/[\u00A0\u2000-\u200A]/g, ' ')
+      .trim();
+  }
+
   function parseConfigCsv(csvText){
     // expects a single row: repo,path,branch,token
     const firstLine = csvText.split(/\r?\n/)[0];
-    const parts = firstLine.split(',').map(s => s.trim().replace(/^"|"$/g, ''));
+    const parts = firstLine.split(',').map(s => sanitizeConfigValue(s.trim().replace(/^"|"$/g, '')));
     const [repo, path, branch, token] = parts;
     return { repo, path, branch, token };
   }
@@ -715,7 +728,14 @@
     // local override (settings modal) always wins if present, useful for testing
     try{
       const local = JSON.parse(localStorage.getItem(CFG_KEY) || '{}');
-      if(local.repo && local.token && local.path) return local;
+      if(local.repo && local.token && local.path){
+        return {
+          repo: sanitizeConfigValue(local.repo),
+          path: sanitizeConfigValue(local.path),
+          branch: sanitizeConfigValue(local.branch),
+          token: sanitizeConfigValue(local.token)
+        };
+      }
     }catch(e){ /* ignore */ }
 
     // otherwise pull from the published sheet, so no per-device setup is needed
