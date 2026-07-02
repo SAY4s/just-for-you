@@ -26,21 +26,24 @@ This way, if the token is ever exposed, the damage is limited to one repo, one p
 2. Repo → Settings → Pages → Deploy from branch → `main` / root.
 3. Your site will be live at `https://yourusername.github.io/reponame/`.
 
-## 4. Configure delivery settings (you only, before sending the link)
+## 4. Configure delivery settings via a published Google Sheet
 
-**Important: do this on your own device, not a shared/public computer** — the token is stored in that browser's local storage.
+Instead of the token living in the page's source (which would get it auto-revoked by GitHub's secret scanning on a public repo) or requiring per-device setup, the app fetches its config at submit-time from a Google Sheet you publish as CSV.
 
-1. Open your live site.
-2. Trigger the hidden settings panel: press the **`S` key five times quickly**, or tap the tiny dot in the bottom-right corner five times (works on mobile).
-3. Fill in:
-   - **Repo:** `yourname/date-answers`
-   - **File path:** `responses.json`
-   - **Branch:** `main`
-   - **Token:** your fine-grained PAT
-4. Click **Save to this browser**.
-5. Close the settings modal.
+1. Create a new Google Sheet.
+2. In cell `A1`, put a single row: `repo,path,branch,token` — for example:
+   ```
+   yourname/date-answers,responses.json,main,github_pat_xxxxxxxxxxxx
+   ```
+3. `File → Share → Publish to web` → format **Comma-separated values (.csv)** → Publish.
+4. Copy the resulting URL (looks like `https://docs.google.com/spreadsheets/d/e/.../pub?output=csv`).
+5. Paste that URL into `REMOTE_CONFIG_URL` near the top of the `GITHUB SUBMISSION` section in `index.html`, then redeploy.
 
-Your partner never sees this panel or the token — it's saved only in your browser's local storage, not in the page's source code, so it's never sent to them.
+**Be aware:** a "published to web" Google Sheet is accessible to anyone with the link — it isn't private, and it isn't protected by your Google account login. It's just a link that isn't sitting inside your public git history where GitHub's automated scanner would catch and revoke it. Treat that link with the same care you'd treat the token itself: don't post it publicly, and if you ever suspect it's been shared or guessed, revoke the token immediately from GitHub → Settings → Developer settings and generate a fresh one.
+
+Your partner never sees this URL or the token directly — the page fetches it in the background when they hit submit.
+
+There's still a hidden settings panel in the app (tap the tiny dot bottom-right 5×, or press `S` 5×) that lets you override the config with a locally-stored value for testing — useful if you want to test against a different repo without editing the Sheet.
 
 ## 5. Send the link
 
