@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fa" dir="rtl">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>will you? 💌</title>
+<title>میخوای بیای دیت؟ 💌</title>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <script src="https://cdn.tailwindcss.com"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
@@ -25,7 +25,7 @@
   }
   html,body{
     height:100%;
-    font-family:'Quicksand', sans-serif;
+    font-family:'Vazirmatn', sans-serif;
     color:var(--ink);
     background:
       radial-gradient(circle at 15% 20%, var(--pink-100), transparent 45%),
@@ -35,7 +35,7 @@
       var(--pink-50);
     overflow-x:hidden;
   }
-  .font-display{ font-family:'Fredoka', sans-serif; }
+  .font-display{ font-family:'Vazirmatn', sans-serif; font-weight:700; }
 
   @media (prefers-reduced-motion: reduce){
     *{ animation-duration:0.001ms !important; animation-iteration-count:1 !important; transition-duration:0.001ms !important; }
@@ -188,33 +188,33 @@
   <!-- ============= SETTINGS MODAL (sender-only) ============= -->
   <div id="settingsModal" class="fixed inset-0 z-[70] hidden items-center justify-center bg-[#5b3a52]/50 backdrop-blur-sm p-4">
     <div class="stage-card rounded-3xl max-w-md w-full p-6 relative">
-      <button id="closeSettings" class="absolute top-4 right-4 text-pink-400 hover:text-pink-600 text-xl"><i class="fa-solid fa-xmark"></i></button>
-      <h2 class="font-display text-2xl text-pink-600 mb-1">⚙️ delivery settings</h2>
-      <p class="text-sm text-[var(--ink)]/70 mb-4">This is just for you (the sender). It's saved only in <b>this browser's</b> storage — never in the page's code, and never sent anywhere except GitHub when your partner hits submit.</p>
+      <button id="closeSettings" class="absolute top-4 left-4 text-pink-400 hover:text-pink-600 text-xl"><i class="fa-solid fa-xmark"></i></button>
+      <h2 class="font-display text-2xl text-pink-600 mb-1">⚙️ تنظیمات ارسال</h2>
+      <p class="text-sm text-[var(--ink)]/70 mb-4">این بخش فقط برای خودته (فرستنده). فقط در حافظه‌ی <b>همین مرورگر</b> ذخیره می‌شه — نه توی کد صفحه، و جایی هم فرستاده نمی‌شه مگر وقتی پارتنرت دکمه‌ی ارسال رو بزنه.</p>
 
-      <label class="block text-sm font-semibold mb-1">GitHub repo (owner/name)</label>
-      <input id="cfgRepo" type="text" placeholder="yourname/date-answers"
-        class="w-full mb-3 px-4 py-2.5 rounded-xl border-2 border-pink-100 focus:border-pink-400 outline-none text-sm">
+      <label class="block text-sm font-semibold mb-1">ریپازیتوری گیت‌هاب (owner/name)</label>
+      <input id="cfgRepo" type="text" placeholder="yourname/date-answers" dir="ltr"
+        class="w-full mb-3 px-4 py-2.5 rounded-xl border-2 border-pink-100 focus:border-pink-400 outline-none text-sm text-left">
 
-      <label class="block text-sm font-semibold mb-1">File path in repo</label>
-      <input id="cfgPath" type="text" placeholder="responses.json"
-        class="w-full mb-3 px-4 py-2.5 rounded-xl border-2 border-pink-100 focus:border-pink-400 outline-none text-sm">
+      <label class="block text-sm font-semibold mb-1">مسیر فایل در ریپو</label>
+      <input id="cfgPath" type="text" placeholder="responses.json" dir="ltr"
+        class="w-full mb-3 px-4 py-2.5 rounded-xl border-2 border-pink-100 focus:border-pink-400 outline-none text-sm text-left">
 
-      <label class="block text-sm font-semibold mb-1">Branch</label>
-      <input id="cfgBranch" type="text" placeholder="main"
-        class="w-full mb-3 px-4 py-2.5 rounded-xl border-2 border-pink-100 focus:border-pink-400 outline-none text-sm">
+      <label class="block text-sm font-semibold mb-1">برنچ (Branch)</label>
+      <input id="cfgBranch" type="text" placeholder="main" dir="ltr"
+        class="w-full mb-3 px-4 py-2.5 rounded-xl border-2 border-pink-100 focus:border-pink-400 outline-none text-sm text-left">
 
-      <label class="block text-sm font-semibold mb-1">Personal Access Token</label>
-      <input id="cfgToken" type="password" placeholder="github_pat_..."
-        class="w-full mb-2 px-4 py-2.5 rounded-xl border-2 border-pink-100 focus:border-pink-400 outline-none text-sm">
+      <label class="block text-sm font-semibold mb-1">توکن (Personal Access Token)</label>
+      <input id="cfgToken" type="password" placeholder="github_pat_..." dir="ltr"
+        class="w-full mb-2 px-4 py-2.5 rounded-xl border-2 border-pink-100 focus:border-pink-400 outline-none text-sm text-left">
       <p class="text-xs text-[var(--ink)]/60 mb-4">
-        Use a <b>fine-grained token</b> scoped to only this repo, with only "Contents: Read and write" permission.
-        Anyone with your browser's local storage or dev tools could read this — don't use this settings page on a shared or public computer.
+        از یک <b>توکن محدود (fine-grained)</b> استفاده کن که فقط به همین ریپو و فقط با دسترسی «Contents: Read and write» محدود باشه.
+        هرکسی که به local storage یا Dev Tools این مرورگر دسترسی داشته باشه می‌تونه این رو ببینه — این تنظیمات رو روی سیستم مشترک یا عمومی باز نکن.
       </p>
 
       <div class="flex gap-2">
-        <button id="saveSettings" class="flex-1 bg-pink-600 hover:bg-pink-700 text-white font-semibold py-2.5 rounded-xl transition">Save to this browser</button>
-        <button id="clearSettings" class="px-4 py-2.5 rounded-xl border-2 border-pink-200 text-pink-600 hover:bg-pink-50 transition text-sm">Clear</button>
+        <button id="saveSettings" class="flex-1 bg-pink-600 hover:bg-pink-700 text-white font-semibold py-2.5 rounded-xl transition">ذخیره در این مرورگر</button>
+        <button id="clearSettings" class="px-4 py-2.5 rounded-xl border-2 border-pink-200 text-pink-600 hover:bg-pink-50 transition text-sm">پاک کردن</button>
       </div>
       <p id="settingsStatus" class="text-xs mt-3 text-emerald-600 h-4"></p>
     </div>
@@ -239,161 +239,161 @@
       <section class="step active" data-step="1">
         <div class="text-center relative" style="min-height:340px;">
           <div class="text-6xl mb-3 animate-bounce" style="animation-duration:2.2s;">🥺</div>
-          <h1 class="font-display text-3xl sm:text-4xl text-pink-600 mb-2 leading-snug">Will you go on<br>a date with me?</h1>
-          <p class="text-[var(--ink)]/70 mb-10">no pressure, but the correct answer is on the left 👀</p>
+          <h1 class="font-display text-3xl sm:text-4xl text-pink-600 mb-2 leading-snug">میخوای با من<br>بیای دیت؟</h1>
+          <p class="text-[var(--ink)]/70 mb-10">فشار نیست، ولی جواب درست همینه که پایینه 👀</p>
 
           <div class="relative flex items-center justify-center gap-5" style="height:70px;">
             <button id="yesBtn" class="btn-yes text-white font-display text-lg px-8 py-4 rounded-full whitespace-nowrap">
-              Yes, absolutely! 💖
+              بله حتماً! 💖
             </button>
             <button id="noBtn" class="absolute font-display text-lg px-8 py-4 rounded-full bg-white border-2 border-pink-200 text-pink-400 whitespace-nowrap"
               style="left:calc(50% + 95px);">
-              No
+              نه
             </button>
           </div>
-          <p id="noHint" class="text-xs text-pink-400 mt-24 opacity-0 transition-opacity">it's okay, it happens to everyone 🙈</p>
+          <p id="noHint" class="text-xs text-pink-400 mt-24 opacity-0 transition-opacity">اشکالی نداره، برای همه پیش میاد 🙈</p>
         </div>
       </section>
 
       <!-- STEP 2 : location -->
       <section class="step" data-step="2">
-        <h2 class="font-display text-2xl text-pink-600 text-center mb-1">Where should we go? 🗺️</h2>
-        <p class="text-center text-[var(--ink)]/60 text-sm mb-6">pick whatever sounds the most like us</p>
+        <h2 class="font-display text-2xl text-pink-600 text-center mb-1">کجا بریم؟ 🗺️</h2>
+        <p class="text-center text-[var(--ink)]/60 text-sm mb-6">هرکدوم که بیشتر به ما میاد رو انتخاب کن</p>
         <div class="grid grid-cols-2 gap-3 mb-4" id="locationGrid">
-          <button class="choice-card rounded-2xl p-4 text-center relative" data-value="Cozy cafe ☕">
+          <button class="choice-card rounded-2xl p-4 text-center relative" data-value="کافه‌ی دنج ☕">
             <span class="check-badge absolute top-2 right-2 text-pink-600"><i class="fa-solid fa-circle-check"></i></span>
             <div class="text-3xl mb-2">☕</div>
-            <div class="font-semibold text-sm">Cozy cafe</div>
+            <div class="font-semibold text-sm">کافه‌ی دنج</div>
           </button>
-          <button class="choice-card rounded-2xl p-4 text-center relative" data-value="Nice restaurant 🍝">
+          <button class="choice-card rounded-2xl p-4 text-center relative" data-value="یه رستوران خوب 🍝">
             <span class="check-badge absolute top-2 right-2 text-pink-600"><i class="fa-solid fa-circle-check"></i></span>
             <div class="text-3xl mb-2">🍝</div>
-            <div class="font-semibold text-sm">Restaurant</div>
+            <div class="font-semibold text-sm">رستوران</div>
           </button>
-          <button class="choice-card rounded-2xl p-4 text-center relative" data-value="Walk in the park 🌳">
+          <button class="choice-card rounded-2xl p-4 text-center relative" data-value="پیاده‌روی توی پارک 🌳">
             <span class="check-badge absolute top-2 right-2 text-pink-600"><i class="fa-solid fa-circle-check"></i></span>
             <div class="text-3xl mb-2">🌳</div>
-            <div class="font-semibold text-sm">Park walk</div>
+            <div class="font-semibold text-sm">پیاده‌روی پارک</div>
           </button>
           <button class="choice-card rounded-2xl p-4 text-center relative" data-value="__custom__">
             <span class="check-badge absolute top-2 right-2 text-pink-600"><i class="fa-solid fa-circle-check"></i></span>
             <div class="text-3xl mb-2">✨</div>
-            <div class="font-semibold text-sm">Surprise me</div>
+            <div class="font-semibold text-sm">غافلگیرم کن</div>
           </button>
         </div>
-        <input id="locationCustom" type="text" placeholder="type your own idea..."
+        <input id="locationCustom" type="text" placeholder="ایده‌ی خودتو بنویس..."
           class="w-full hidden mb-4 px-4 py-2.5 rounded-xl border-2 border-pink-100 focus:border-pink-400 outline-none text-sm">
         <div class="flex justify-between items-center mt-6">
-          <button class="back-btn text-pink-400 text-sm font-semibold hover:text-pink-600" data-back="1"><i class="fa-solid fa-arrow-left mr-1"></i>back</button>
-          <button class="next-btn bg-pink-600 hover:bg-pink-700 text-white font-semibold px-6 py-2.5 rounded-full transition disabled:opacity-40 disabled:pointer-events-none" data-next="3" disabled>next <i class="fa-solid fa-arrow-right ml-1"></i></button>
+          <button class="back-btn inline-flex items-center gap-1 text-pink-400 text-sm font-semibold hover:text-pink-600" data-back="1"><i class="fa-solid fa-arrow-right"></i>برگشت</button>
+          <button class="next-btn inline-flex items-center gap-1 bg-pink-600 hover:bg-pink-700 text-white font-semibold px-6 py-2.5 rounded-full transition disabled:opacity-40 disabled:pointer-events-none" data-next="3" disabled>بعدی <i class="fa-solid fa-arrow-left"></i></button>
         </div>
       </section>
 
       <!-- STEP 3 : day -->
       <section class="step" data-step="3">
-        <h2 class="font-display text-2xl text-pink-600 text-center mb-1">Which day? 📅</h2>
-        <p class="text-center text-[var(--ink)]/60 text-sm mb-6">whenever works for your heart</p>
+        <h2 class="font-display text-2xl text-pink-600 text-center mb-1">کدوم روز؟ 📅</h2>
+        <p class="text-center text-[var(--ink)]/60 text-sm mb-6">هروقت که دلت بخواد</p>
         <div class="grid grid-cols-1 gap-3 mb-4" id="dayGrid">
-          <button class="choice-card rounded-2xl p-4 text-left relative flex items-center gap-3" data-value="This weekend 🌞">
+          <button class="choice-card rounded-2xl p-4 text-right relative flex items-center gap-3" data-value="آخر همین هفته 🌞">
             <span class="text-2xl">🌞</span>
             <div>
-              <div class="font-semibold text-sm">This weekend</div>
-              <div class="text-xs text-[var(--ink)]/50">Sat or Sun, whatever's freer</div>
+              <div class="font-semibold text-sm">آخر همین هفته</div>
+              <div class="text-xs text-[var(--ink)]/50">پنج‌شنبه یا جمعه، هرکدوم بازتره</div>
             </div>
-            <span class="check-badge ml-auto text-pink-600"><i class="fa-solid fa-circle-check"></i></span>
+            <span class="check-badge ms-auto text-pink-600"><i class="fa-solid fa-circle-check"></i></span>
           </button>
-          <button class="choice-card rounded-2xl p-4 text-left relative flex items-center gap-3" data-value="A weekday evening 🌆">
+          <button class="choice-card rounded-2xl p-4 text-right relative flex items-center gap-3" data-value="یه روز وسط هفته 🌆">
             <span class="text-2xl">🌆</span>
             <div>
-              <div class="font-semibold text-sm">A weekday evening</div>
-              <div class="text-xs text-[var(--ink)]/50">low-key, after work</div>
+              <div class="font-semibold text-sm">یه روز وسط هفته</div>
+              <div class="text-xs text-[var(--ink)]/50">آروم و بی‌دردسر، بعد از کار</div>
             </div>
-            <span class="check-badge ml-auto text-pink-600"><i class="fa-solid fa-circle-check"></i></span>
+            <span class="check-badge ms-auto text-pink-600"><i class="fa-solid fa-circle-check"></i></span>
           </button>
-          <button class="choice-card rounded-2xl p-4 text-left relative flex items-center gap-3" data-value="__pick__">
+          <button class="choice-card rounded-2xl p-4 text-right relative flex items-center gap-3" data-value="__pick__">
             <span class="text-2xl">🗓️</span>
             <div>
-              <div class="font-semibold text-sm">Let me pick a date</div>
-              <div class="text-xs text-[var(--ink)]/50">specific day</div>
+              <div class="font-semibold text-sm">بذار خودم روز رو انتخاب کنم</div>
+              <div class="text-xs text-[var(--ink)]/50">یک روز مشخص</div>
             </div>
-            <span class="check-badge ml-auto text-pink-600"><i class="fa-solid fa-circle-check"></i></span>
+            <span class="check-badge ms-auto text-pink-600"><i class="fa-solid fa-circle-check"></i></span>
           </button>
         </div>
         <input id="dayCustom" type="date" class="w-full hidden mb-4 px-4 py-2.5 rounded-xl border-2 border-pink-100 focus:border-pink-400 outline-none text-sm">
         <div class="flex justify-between items-center mt-6">
-          <button class="back-btn text-pink-400 text-sm font-semibold hover:text-pink-600" data-back="2"><i class="fa-solid fa-arrow-left mr-1"></i>back</button>
-          <button class="next-btn bg-pink-600 hover:bg-pink-700 text-white font-semibold px-6 py-2.5 rounded-full transition disabled:opacity-40 disabled:pointer-events-none" data-next="4" disabled>next <i class="fa-solid fa-arrow-right ml-1"></i></button>
+          <button class="back-btn inline-flex items-center gap-1 text-pink-400 text-sm font-semibold hover:text-pink-600" data-back="2"><i class="fa-solid fa-arrow-right"></i>برگشت</button>
+          <button class="next-btn inline-flex items-center gap-1 bg-pink-600 hover:bg-pink-700 text-white font-semibold px-6 py-2.5 rounded-full transition disabled:opacity-40 disabled:pointer-events-none" data-next="4" disabled>بعدی <i class="fa-solid fa-arrow-left"></i></button>
         </div>
       </section>
 
       <!-- STEP 4 : time -->
       <section class="step" data-step="4">
-        <h2 class="font-display text-2xl text-pink-600 text-center mb-1">What time? ⏰</h2>
-        <p class="text-center text-[var(--ink)]/60 text-sm mb-6">pick a vibe</p>
+        <h2 class="font-display text-2xl text-pink-600 text-center mb-1">چه ساعتی؟ ⏰</h2>
+        <p class="text-center text-[var(--ink)]/60 text-sm mb-6">یه حس‌وحال انتخاب کن</p>
         <div class="grid grid-cols-3 gap-3 mb-4" id="timeGrid">
-          <button class="choice-card rounded-2xl p-4 text-center relative" data-value="Afternoon coffee ☀️">
+          <button class="choice-card rounded-2xl p-4 text-center relative" data-value="قهوه‌ی بعدازظهر ☀️">
             <span class="check-badge absolute top-2 right-2 text-pink-600"><i class="fa-solid fa-circle-check"></i></span>
             <div class="text-2xl mb-1">☀️</div>
-            <div class="font-semibold text-xs">Afternoon<br>coffee</div>
+            <div class="font-semibold text-xs">قهوه‌ی<br>بعدازظهر</div>
           </button>
-          <button class="choice-card rounded-2xl p-4 text-center relative" data-value="Sunset walk 🌇">
+          <button class="choice-card rounded-2xl p-4 text-center relative" data-value="پیاده‌روی غروب 🌇">
             <span class="check-badge absolute top-2 right-2 text-pink-600"><i class="fa-solid fa-circle-check"></i></span>
             <div class="text-2xl mb-1">🌇</div>
-            <div class="font-semibold text-xs">Sunset<br>walk</div>
+            <div class="font-semibold text-xs">پیاده‌روی<br>غروب</div>
           </button>
-          <button class="choice-card rounded-2xl p-4 text-center relative" data-value="Dinner time 🌙">
+          <button class="choice-card rounded-2xl p-4 text-center relative" data-value="وقت شام 🌙">
             <span class="check-badge absolute top-2 right-2 text-pink-600"><i class="fa-solid fa-circle-check"></i></span>
             <div class="text-2xl mb-1">🌙</div>
-            <div class="font-semibold text-xs">Dinner<br>time</div>
+            <div class="font-semibold text-xs">وقت<br>شام</div>
           </button>
         </div>
         <div class="flex items-center justify-center gap-2 mb-2">
-          <span class="text-xs text-[var(--ink)]/50">or set exact time:</span>
+          <span class="text-xs text-[var(--ink)]/50">یا یه ساعت دقیق انتخاب کن:</span>
           <input id="timeCustom" type="time" class="px-3 py-1.5 rounded-lg border-2 border-pink-100 focus:border-pink-400 outline-none text-sm">
         </div>
         <div class="flex justify-between items-center mt-6">
-          <button class="back-btn text-pink-400 text-sm font-semibold hover:text-pink-600" data-back="3"><i class="fa-solid fa-arrow-left mr-1"></i>back</button>
-          <button class="next-btn bg-pink-600 hover:bg-pink-700 text-white font-semibold px-6 py-2.5 rounded-full transition disabled:opacity-40 disabled:pointer-events-none" data-next="5" disabled>next <i class="fa-solid fa-arrow-right ml-1"></i></button>
+          <button class="back-btn inline-flex items-center gap-1 text-pink-400 text-sm font-semibold hover:text-pink-600" data-back="3"><i class="fa-solid fa-arrow-right"></i>برگشت</button>
+          <button class="next-btn inline-flex items-center gap-1 bg-pink-600 hover:bg-pink-700 text-white font-semibold px-6 py-2.5 rounded-full transition disabled:opacity-40 disabled:pointer-events-none" data-next="5" disabled>بعدی <i class="fa-solid fa-arrow-left"></i></button>
         </div>
       </section>
 
       <!-- STEP 5 : love note -->
       <section class="step" data-step="5">
-        <h2 class="font-display text-2xl text-pink-600 text-center mb-1">One more thing 💌</h2>
-        <p class="text-center text-[var(--ink)]/60 text-sm mb-5">write me a little something (optional, but I'll definitely read it twice)</p>
-        <textarea id="loveNote" rows="5" placeholder="Dear you..."
+        <h2 class="font-display text-2xl text-pink-600 text-center mb-1">یه چیز دیگه هم بگو 💌</h2>
+        <p class="text-center text-[var(--ink)]/60 text-sm mb-5">یه جمله‌ی دلی برام بنویس (اختیاریه، ولی حتماً دوبار می‌خونمش)</p>
+        <textarea id="loveNote" rows="5" placeholder="عزیز دلم..."
           class="love-paper w-full rounded-xl p-4 text-sm outline-none focus:ring-2 focus:ring-pink-300 resize-none font-display"></textarea>
         <div class="flex justify-between items-center mt-6">
-          <button class="back-btn text-pink-400 text-sm font-semibold hover:text-pink-600" data-back="4"><i class="fa-solid fa-arrow-left mr-1"></i>back</button>
-          <button class="next-btn bg-pink-600 hover:bg-pink-700 text-white font-semibold px-6 py-2.5 rounded-full transition" data-next="6">next <i class="fa-solid fa-arrow-right ml-1"></i></button>
+          <button class="back-btn inline-flex items-center gap-1 text-pink-400 text-sm font-semibold hover:text-pink-600" data-back="4"><i class="fa-solid fa-arrow-right"></i>برگشت</button>
+          <button class="next-btn inline-flex items-center gap-1 bg-pink-600 hover:bg-pink-700 text-white font-semibold px-6 py-2.5 rounded-full transition" data-next="6">بعدی <i class="fa-solid fa-arrow-left"></i></button>
         </div>
       </section>
 
       <!-- STEP 6 : review + submit -->
       <section class="step" data-step="6">
-        <h2 class="font-display text-2xl text-pink-600 text-center mb-1">Ready to send? 🦄</h2>
-        <p class="text-center text-[var(--ink)]/60 text-sm mb-5">here's what I'm about to receive</p>
+        <h2 class="font-display text-2xl text-pink-600 text-center mb-1">آماده‌ای بفرستی؟ 🦄</h2>
+        <p class="text-center text-[var(--ink)]/60 text-sm mb-5">این چیزیه که قراره برام برسه</p>
 
         <div class="bg-pink-50/80 rounded-2xl p-4 text-sm space-y-2 mb-6 border-2 border-pink-100" id="reviewBox">
           <!-- filled by JS -->
         </div>
 
         <button id="submitBtn" class="btn-finale w-full text-white font-display text-lg py-4 rounded-full flex items-center justify-center gap-2">
-          <i class="fa-solid fa-wand-magic-sparkles"></i> Send to my heart!
+          <i class="fa-solid fa-wand-magic-sparkles"></i> بفرست برای قلبم!
         </button>
-        <button class="back-btn text-pink-400 text-sm font-semibold hover:text-pink-600 mt-4 block mx-auto" data-back="5"><i class="fa-solid fa-arrow-left mr-1"></i>back</button>
+        <button class="back-btn flex items-center gap-1 text-pink-400 text-sm font-semibold hover:text-pink-600 mt-4 mx-auto" data-back="5"><i class="fa-solid fa-arrow-right"></i>برگشت</button>
 
         <!-- sending state -->
         <div id="sendingState" class="hidden text-center py-6">
           <div class="spinner w-10 h-10 mx-auto mb-3"></div>
-          <p class="text-pink-500 text-sm">sending it with love...</p>
+          <p class="text-pink-500 text-sm">دارم با عشق می‌فرستمش...</p>
         </div>
 
         <!-- error state -->
         <div id="errorState" class="hidden text-center py-4 bg-red-50 border-2 border-red-100 rounded-2xl mt-4 px-4">
-          <p class="text-red-500 text-sm font-semibold mb-1">Hmm, that didn't send 😢</p>
+          <p class="text-red-500 text-sm font-semibold mb-1">هوم، ارسال نشد 😢</p>
           <p id="errorDetail" class="text-red-400 text-xs mb-3"></p>
-          <button id="retryBtn" class="text-red-500 text-sm font-semibold underline">try again</button>
+          <button id="retryBtn" class="text-red-500 text-sm font-semibold underline">دوباره امتحان کن</button>
         </div>
       </section>
 
@@ -401,14 +401,14 @@
       <section class="step" data-step="7">
         <div class="text-center py-4">
           <div class="text-7xl mb-4">🦄</div>
-          <h2 class="font-display text-3xl text-pink-600 mb-2">Can't wait, gorgeous!</h2>
-          <p class="text-[var(--ink)]/70">Your answers have been sent to me 🦄✨<br>See you soon 💖</p>
+          <h2 class="font-display text-3xl text-pink-600 mb-2">منتظرتم قشنگم!</h2>
+          <p class="text-[var(--ink)]/70">جوابت برام فرستاده شد 🦄✨<br>به‌زودی می‌بینمت 💖</p>
         </div>
       </section>
 
     </div>
 
-    <p class="text-center text-xs text-[var(--ink)]/40 mt-6">made with 💗 just for you</p>
+    <p class="text-center text-xs text-[var(--ink)]/40 mt-6">با 💗 فقط برای تو ساخته شده</p>
   </main>
 
 <script>
@@ -619,7 +619,7 @@
   });
   function formatDate(iso){
     const d = new Date(iso + 'T00:00:00');
-    return d.toLocaleDateString(undefined, { weekday:'long', month:'long', day:'numeric' }) + ' 🗓️';
+    return d.toLocaleDateString('fa-IR-u-ca-gregory', { weekday:'long', month:'long', day:'numeric' }) + ' 🗓️';
   }
 
   /* ============================================================
@@ -649,7 +649,7 @@
   });
   function formatTime(t){
     const [h,m] = t.split(':').map(Number);
-    const period = h >= 12 ? 'PM' : 'AM';
+    const period = h >= 12 ? 'ب.ظ' : 'ق.ظ';
     const h12 = ((h+11)%12)+1;
     return `${h12}:${String(m).padStart(2,'0')} ${period}`;
   }
@@ -680,10 +680,10 @@
 
   function renderReview(){
     reviewBox.innerHTML = `
-      <div class="flex items-center gap-2"><i class="fa-solid fa-location-dot text-pink-500 w-4"></i><span class="font-semibold">Where:</span> ${escapeHtml(state.location||'—')}</div>
-      <div class="flex items-center gap-2"><i class="fa-solid fa-calendar-heart text-pink-500 w-4"></i><span class="font-semibold">Day:</span> ${escapeHtml(state.day||'—')}</div>
-      <div class="flex items-center gap-2"><i class="fa-solid fa-clock text-pink-500 w-4"></i><span class="font-semibold">Time:</span> ${escapeHtml(state.time||'—')}</div>
-      ${state.note ? `<div class="pt-2 border-t border-pink-100"><span class="font-semibold"><i class="fa-solid fa-envelope text-pink-500 w-4 mr-1"></i>Note:</span><br><span class="italic">"${escapeHtml(state.note)}"</span></div>` : ''}
+      <div class="flex items-center gap-2"><i class="fa-solid fa-location-dot text-pink-500 w-4"></i><span class="font-semibold">کجا:</span> ${escapeHtml(state.location||'—')}</div>
+      <div class="flex items-center gap-2"><i class="fa-solid fa-calendar-heart text-pink-500 w-4"></i><span class="font-semibold">کِی:</span> ${escapeHtml(state.day||'—')}</div>
+      <div class="flex items-center gap-2"><i class="fa-solid fa-clock text-pink-500 w-4"></i><span class="font-semibold">ساعت:</span> ${escapeHtml(state.time||'—')}</div>
+      ${state.note ? `<div class="pt-2 border-t border-pink-100"><span class="font-semibold"><i class="fa-solid fa-envelope text-pink-500 w-4 me-1"></i>پیام:</span><br><span class="italic">«${escapeHtml(state.note)}»</span></div>` : ''}
     `;
   }
   function escapeHtml(str){
@@ -710,16 +710,36 @@
   }
 
   function parseConfigCsv(csvText){
-    // expects a single row: repo,path,branch,token
-    const firstLine = csvText.split(/\r?\n/)[0];
-    const parts = firstLine.split(',').map(s => sanitizeConfigValue(s.trim().replace(/^"|"$/g, '')));
-    const [repo, path, branch, token] = parts;
-    return { repo, path, branch, token };
+    // expects a row like: repo,path,branch,token
+    // scan every line (in case there's a header row, blank line, etc.)
+    // and pick the first one that actually looks like a config row.
+    const lines = csvText.split(/\r?\n/).map(l => l.trim()).filter(Boolean);
+
+    function toFields(line){
+      return line.split(',').map(s => sanitizeConfigValue(s.trim().replace(/^"|"$/g, '')));
+    }
+
+    // prefer a line whose last field looks like a real GitHub token
+    for(const line of lines){
+      const parts = toFields(line);
+      if(parts.length >= 4 && /^(github_pat_|ghp_|gho_|ghu_|ghs_|ghr_)/.test(parts[3])){
+        const [repo, path, branch, token] = parts;
+        return { repo, path, branch, token };
+      }
+    }
+
+    // fallback: just use the first non-empty line, in case the token has an unusual prefix
+    if(lines.length){
+      const [repo, path, branch, token] = toFields(lines[0]);
+      return { repo, path, branch, token };
+    }
+
+    return {};
   }
 
   async function fetchRemoteConfig(){
     const res = await fetch(REMOTE_CONFIG_URL, { cache: 'no-store' });
-    if(!res.ok) throw new Error('Could not load delivery settings.');
+    if(!res.ok) throw new Error('نتونستم تنظیمات ارسال رو بخونم.');
     const text = await res.text();
     return parseConfigCsv(text);
   }
@@ -751,11 +771,15 @@
     try{
       cfg = await getConfig();
     }catch(e){
-      showError('Could not load delivery settings. Check your connection and try again.');
+      showError('نتونستم تنظیمات ارسال رو بخونم. اتصال اینترنتت رو چک کن و دوباره امتحان کن.');
       return;
     }
     if(!cfg.repo || !cfg.token || !cfg.path){
-      showError('This link isn\'t fully set up yet.');
+      const missing = [];
+      if(!cfg.repo) missing.push('ریپو');
+      if(!cfg.path) missing.push('مسیر فایل');
+      if(!cfg.token) missing.push('توکن');
+      showError(`این لینک هنوز کامل تنظیم نشده. موارد ناقص: ${missing.join('، ')}.`);
       return;
     }
     const branch = cfg.branch || 'main';
@@ -800,7 +824,7 @@
       const encodedContent = btoa(unescape(encodeURIComponent(newContent)));
 
       const putBody = {
-        message: `💌 new date response — ${new Date().toLocaleString()}`,
+        message: `💌 جواب جدید دیت — ${new Date().toLocaleString('fa-IR')}`,
         content: encodedContent,
         branch: branch
       };
@@ -827,7 +851,7 @@
 
     }catch(err){
       console.error(err);
-      showError(err.message || 'Something went wrong talking to GitHub.');
+      showError(err.message || 'یه مشکلی توی ارتباط با گیت‌هاب پیش اومد.');
     }
   }
 
@@ -902,13 +926,13 @@
       token: cfgToken.value.trim()
     };
     localStorage.setItem(CFG_KEY, JSON.stringify(cfg));
-    settingsStatus.textContent = '✓ saved to this browser';
+    settingsStatus.textContent = '✓ در این مرورگر ذخیره شد';
     setTimeout(()=>{ settingsStatus.textContent=''; }, 2500);
   });
   clearSettings.addEventListener('click', ()=>{
     localStorage.removeItem(CFG_KEY);
     cfgRepo.value = ''; cfgPath.value=''; cfgBranch.value=''; cfgToken.value='';
-    settingsStatus.textContent = '✓ cleared';
+    settingsStatus.textContent = '✓ پاک شد';
     setTimeout(()=>{ settingsStatus.textContent=''; }, 2000);
   });
 
