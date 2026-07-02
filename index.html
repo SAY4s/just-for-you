@@ -693,24 +693,53 @@
   /* ============================================================
      GITHUB SUBMISSION
   ============================================================ */
-  const CFG_KEY = 'dateAppConfig_v1';
-  function getConfig(){
-    try{ return JSON.parse(localStorage.getItem(CFG_KEY) || '{}'); }
-    catch(e){ return {}; }
+  const CFG_KEY = 'dateAppConfig_v1'; // still used as a manual override, see settings modal
+  const REMOTE_CONFIG_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRQwgHgBvIpgkVHaKENnJgnwdEYIrUSLqUH7s0_xUWkEx-GcMI_EPUiURR_OrNBA7fED984X6Ygam1I/pub?output=csv';
+
+  function parseConfigCsv(csvText){
+    // expects a single row: repo,path,branch,token
+    const firstLine = csvText.split(/\r?\n/)[0];
+    const parts = firstLine.split(',').map(s => s.trim().replace(/^"|"$/g, ''));
+    const [repo, path, branch, token] = parts;
+    return { repo, path, branch, token };
+  }
+
+  async function fetchRemoteConfig(){
+    const res = await fetch(REMOTE_CONFIG_URL, { cache: 'no-store' });
+    if(!res.ok) throw new Error('Could not load delivery settings.');
+    const text = await res.text();
+    return parseConfigCsv(text);
+  }
+
+  async function getConfig(){
+    // local override (settings modal) always wins if present, useful for testing
+    try{
+      const local = JSON.parse(localStorage.getItem(CFG_KEY) || '{}');
+      if(local.repo && local.token && local.path) return local;
+    }catch(e){ /* ignore */ }
+
+    // otherwise pull from the published sheet, so no per-device setup is needed
+    return await fetchRemoteConfig();
   }
 
   async function submitToGitHub(){
-    const cfg = getConfig();
+    submitBtn.classList.add('hidden');
+    sendingState.classList.remove('hidden');
+    errorState.classList.add('hidden');
+
+    let cfg;
+    try{
+      cfg = await getConfig();
+    }catch(e){
+      showError('Could not load delivery settings. Check your connection and try again.');
+      return;
+    }
     if(!cfg.repo || !cfg.token || !cfg.path){
-      showError('This link isn\'t fully set up yet. The sender needs to open settings and add their repo + token.');
+      showError('This link isn\'t fully set up yet.');
       return;
     }
     const branch = cfg.branch || 'main';
     const apiUrl = `https://api.github.com/repos/${cfg.repo}/contents/${encodeURIComponent(cfg.path)}`;
-
-    submitBtn.classList.add('hidden');
-    sendingState.classList.remove('hidden');
-    errorState.classList.add('hidden');
 
     const newEntry = {
       location: state.location,
