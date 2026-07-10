@@ -619,7 +619,10 @@
   });
   function formatDate(iso){
     const d = new Date(iso + 'T00:00:00');
-    return d.toLocaleDateString('fa-IR-u-ca-gregory', { weekday:'long', month:'long', day:'numeric' }) + ' 🗓️';
+    const parts = new Intl.DateTimeFormat('fa-IR-u-ca-persian', { weekday:'long', day:'numeric', month:'long', year:'numeric' }).formatToParts(d);
+    const map = {};
+    parts.forEach(p => map[p.type] = p.value);
+    return `${map.weekday} ${map.day} ${map.month} ${map.year} 🗓️`;
   }
 
   /* ============================================================
