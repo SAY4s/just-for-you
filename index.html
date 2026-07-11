@@ -205,6 +205,21 @@
     font-weight:600;
     padding:4px 0;
   }
+  .ampm-btn{
+    padding:6px 20px;
+    border-radius:999px;
+    border:2px solid var(--pink-100);
+    font-weight:600;
+    font-size:0.85rem;
+    color:var(--ink);
+    transition:all .15s ease;
+  }
+  .ampm-btn:hover{ border-color:var(--pink-300, var(--pink-400)); }
+  .ampm-btn.selected{
+    background:linear-gradient(135deg, var(--pink-500), var(--pink-600));
+    color:#fff;
+    border-color:transparent;
+  }
 
   input[type="radio"]{ accent-color: var(--pink-600); }
 
@@ -273,7 +288,7 @@
       <span class="dot" data-dot="6"></span>
     </div>
 
-    <div class="stage-card rounded-[2rem] w-full max-w-lg p-7 sm:p-10 relative overflow-visible" id="cardWrap">
+    <div class="stage-card rounded-[2rem] w-full max-w-lg p-7 sm:p-10 relative overflow-hidden" id="cardWrap">
 
       <!-- STEP 1 : the big question -->
       <section class="step active" data-step="1">
@@ -282,7 +297,7 @@
           <h1 class="font-display text-3xl sm:text-4xl text-pink-600 mb-2 leading-snug">میخوای با من<br>بیای دیت؟</h1>
           <p class="text-[var(--ink)]/70 mb-10">فشار نیست، ولی جواب درست همینه که پایینه 👀</p>
 
-          <div class="relative flex items-center justify-center gap-5" style="height:70px;">
+          <div id="dodgeArena" class="relative flex items-center justify-center gap-5 mx-auto" style="height:200px; max-width:420px; overflow:hidden;">
             <button id="yesBtn" class="btn-yes text-white font-display text-lg px-8 py-4 rounded-full whitespace-nowrap">
               بله حتماً! 💖
             </button>
@@ -291,7 +306,7 @@
               نه
             </button>
           </div>
-          <p id="noHint" class="text-xs text-pink-400 mt-24 opacity-0 transition-opacity">اشکالی نداره، برای همه پیش میاد 🙈</p>
+          <p id="noHint" class="text-xs text-pink-400 mt-4 opacity-0 transition-opacity">اشکالی نداره، برای همه پیش میاد 🙈</p>
         </div>
       </section>
 
@@ -360,26 +375,12 @@
           </button>
         </div>
         <!-- custom Shamsi calendar -->
-        <div id="dayCustomWrap" class="hidden mb-4 relative">
+        <div id="dayCustomWrap" class="hidden mb-4">
           <button id="dayCustomTrigger" type="button"
             class="w-full flex items-center justify-between px-4 py-2.5 rounded-xl border-2 border-pink-100 focus:border-pink-400 outline-none text-sm bg-white text-[var(--ink)]/70">
             <span id="dayCustomLabel">یک روز رو از تقویم انتخاب کن</span>
             <i class="fa-solid fa-calendar-days text-pink-400"></i>
           </button>
-
-          <div id="jalaliCalendar" class="hidden absolute z-20 mt-2 w-full stage-card rounded-2xl p-4">
-            <div class="flex items-center justify-between mb-3">
-              <button id="calPrev" type="button" class="w-8 h-8 rounded-full hover:bg-pink-100 text-pink-500 flex items-center justify-center">
-                <i class="fa-solid fa-chevron-right"></i>
-              </button>
-              <div id="calMonthLabel" class="font-display text-sm text-pink-600"></div>
-              <button id="calNext" type="button" class="w-8 h-8 rounded-full hover:bg-pink-100 text-pink-500 flex items-center justify-center">
-                <i class="fa-solid fa-chevron-left"></i>
-              </button>
-            </div>
-            <div class="grid grid-cols-7 gap-1 mb-1 text-center" id="calWeekdays"></div>
-            <div class="grid grid-cols-7 gap-1 text-center" id="calDays"></div>
-          </div>
         </div>
         <div class="flex justify-between items-center mt-6">
           <button class="back-btn inline-flex items-center gap-1 text-pink-400 text-sm font-semibold hover:text-pink-600" data-back="2"><i class="fa-solid fa-arrow-right"></i>برگشت</button>
@@ -408,9 +409,15 @@
             <div class="font-semibold text-xs">وقت<br>شام</div>
           </button>
         </div>
-        <div class="flex items-center justify-center gap-2 mb-2">
-          <span class="text-xs text-[var(--ink)]/50">یا یه ساعت دقیق انتخاب کن:</span>
-          <input id="timeCustom" type="time" class="px-3 py-1.5 rounded-lg border-2 border-pink-100 focus:border-pink-400 outline-none text-sm">
+        <div class="text-center mb-2">
+          <span class="text-xs text-[var(--ink)]/50">یا یه ساعت دقیق انتخاب کن</span>
+        </div>
+        <div id="timeCustomWrap" class="mb-4">
+          <button id="timeCustomTrigger" type="button"
+            class="w-full flex items-center justify-between px-4 py-2.5 rounded-xl border-2 border-pink-100 focus:border-pink-400 outline-none text-sm bg-white text-[var(--ink)]/70">
+            <span id="timeCustomLabel">یک ساعت دقیق انتخاب کن</span>
+            <i class="fa-solid fa-clock text-pink-400"></i>
+          </button>
         </div>
         <div class="flex justify-between items-center mt-6">
           <button class="back-btn inline-flex items-center gap-1 text-pink-400 text-sm font-semibold hover:text-pink-600" data-back="3"><i class="fa-solid fa-arrow-right"></i>برگشت</button>
@@ -466,6 +473,41 @@
           <p class="text-[var(--ink)]/70">جوابت برام فرستاده شد 🦄✨<br>به‌زودی می‌بینمت 💖</p>
         </div>
       </section>
+
+      <!-- Shamsi calendar overlay: sits directly on top of the card -->
+      <div id="jalaliCalendar" class="hidden absolute inset-0 z-30 rounded-[2rem] bg-white/98 backdrop-blur-sm p-6 sm:p-8 flex flex-col justify-center">
+        <button id="calClose" type="button" class="absolute top-4 left-4 text-pink-400 hover:text-pink-600 text-lg"><i class="fa-solid fa-xmark"></i></button>
+        <div class="flex items-center justify-between mb-4">
+          <button id="calPrev" type="button" class="w-9 h-9 rounded-full hover:bg-pink-100 text-pink-500 flex items-center justify-center">
+            <i class="fa-solid fa-chevron-right"></i>
+          </button>
+          <div id="calMonthLabel" class="font-display text-base text-pink-600"></div>
+          <button id="calNext" type="button" class="w-9 h-9 rounded-full hover:bg-pink-100 text-pink-500 flex items-center justify-center">
+            <i class="fa-solid fa-chevron-left"></i>
+          </button>
+        </div>
+        <div class="grid grid-cols-7 gap-1 mb-1 text-center" id="calWeekdays"></div>
+        <div class="grid grid-cols-7 gap-1 text-center" id="calDays"></div>
+      </div>
+
+      <!-- time picker overlay: sits directly on top of the card -->
+      <div id="timePickerPanel" class="hidden absolute inset-0 z-30 rounded-[2rem] bg-white/98 backdrop-blur-sm p-6 sm:p-8 flex flex-col justify-center">
+        <button id="timeClose" type="button" class="absolute top-4 left-4 text-pink-400 hover:text-pink-600 text-lg"><i class="fa-solid fa-xmark"></i></button>
+        <div class="flex justify-center gap-2 mb-4">
+          <button type="button" class="ampm-btn" data-period="ق.ظ">ق.ظ</button>
+          <button type="button" class="ampm-btn" data-period="ب.ظ">ب.ظ</button>
+        </div>
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <div class="cal-weekday text-center mb-1">ساعت</div>
+            <div id="hourGrid" class="grid grid-cols-3 gap-1.5 max-h-48 overflow-y-auto pe-1"></div>
+          </div>
+          <div>
+            <div class="cal-weekday text-center mb-1">دقیقه</div>
+            <div id="minuteGrid" class="grid grid-cols-3 gap-1.5 max-h-48 overflow-y-auto pe-1"></div>
+          </div>
+        </div>
+      </div>
 
     </div>
 
@@ -552,13 +594,14 @@
   const yesBtn = document.getElementById('yesBtn');
   const noHint = document.getElementById('noHint');
   const cardWrap = document.getElementById('cardWrap');
+  const dodgeArena = document.getElementById('dodgeArena');
   let noDodges = 0;
 
   function fleeNoButton(){
     noDodges++;
-    const wrap = cardWrap.getBoundingClientRect();
+    const wrap = dodgeArena.getBoundingClientRect();
     const btnW = noBtn.offsetWidth, btnH = noBtn.offsetHeight;
-    const pad = 16;
+    const pad = 10;
     const maxX = Math.max(wrap.width - btnW - pad, pad);
     const maxY = Math.max(wrap.height - btnH - pad, pad);
     const x = pad + Math.random()*maxX;
@@ -822,6 +865,8 @@
     closeCalendar();
   }
 
+  const calClose = document.getElementById('calClose');
+
   function openCalendar(){
     renderCalendar();
     jalaliCalendar.classList.remove('hidden');
@@ -834,6 +879,7 @@
     if(jalaliCalendar.classList.contains('hidden')) openCalendar();
     else closeCalendar();
   });
+  calClose.addEventListener('click', closeCalendar);
   calPrev.addEventListener('click', ()=>{
     calViewMonth--;
     if(calViewMonth < 1){ calViewMonth = 12; calViewYear--; }
@@ -845,7 +891,8 @@
     renderCalendar();
   });
   document.addEventListener('click', (e)=>{
-    if(!dayCustomWrap.contains(e.target)) closeCalendar();
+    if(jalaliCalendar.classList.contains('hidden')) return;
+    if(!jalaliCalendar.contains(e.target) && !dayCustomTrigger.contains(e.target)) closeCalendar();
   });
 
   dayGrid.addEventListener('click', (e)=>{
@@ -867,11 +914,85 @@
   });
 
   /* ============================================================
-     STEP 4 — time
+     STEP 4 — time (custom Persian time picker)
   ============================================================ */
   const timeGrid = document.getElementById('timeGrid');
-  const timeCustom = document.getElementById('timeCustom');
   const timeNextBtn = document.querySelector('.step[data-step="4"] .next-btn');
+  const timeCustomWrap = document.getElementById('timeCustomWrap');
+  const timeCustomTrigger = document.getElementById('timeCustomTrigger');
+  const timeCustomLabel = document.getElementById('timeCustomLabel');
+  const timePickerPanel = document.getElementById('timePickerPanel');
+  const hourGrid = document.getElementById('hourGrid');
+  const minuteGrid = document.getElementById('minuteGrid');
+
+  let selectedPeriod = null; // 'ق.ظ' or 'ب.ظ'
+  let selectedHour = null;   // 1-12
+  let selectedMinute = null; // 0,5,...,55
+
+  // build hour cells (1-12)
+  for(let h = 1; h <= 12; h++){
+    const cell = document.createElement('div');
+    cell.className = 'cal-day';
+    cell.textContent = toPersianDigits(h);
+    cell.dataset.hour = h;
+    cell.addEventListener('click', ()=>{
+      selectedHour = h;
+      hourGrid.querySelectorAll('.cal-day').forEach(c=>c.classList.remove('cal-selected'));
+      cell.classList.add('cal-selected');
+      tryFinalizeTime();
+    });
+    hourGrid.appendChild(cell);
+  }
+  // build minute cells (00, 05, ... 55)
+  for(let m = 0; m < 60; m += 5){
+    const cell = document.createElement('div');
+    cell.className = 'cal-day';
+    cell.textContent = toPersianDigits(String(m).padStart(2,'0'));
+    cell.dataset.minute = m;
+    cell.addEventListener('click', ()=>{
+      selectedMinute = m;
+      minuteGrid.querySelectorAll('.cal-day').forEach(c=>c.classList.remove('cal-selected'));
+      cell.classList.add('cal-selected');
+      tryFinalizeTime();
+    });
+    minuteGrid.appendChild(cell);
+  }
+
+  document.querySelectorAll('.ampm-btn').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      selectedPeriod = btn.dataset.period;
+      document.querySelectorAll('.ampm-btn').forEach(b=>b.classList.remove('selected'));
+      btn.classList.add('selected');
+      tryFinalizeTime();
+    });
+  });
+
+  function tryFinalizeTime(){
+    if(selectedPeriod && selectedHour !== null && selectedMinute !== null){
+      const label = `${toPersianDigits(selectedHour)}:${toPersianDigits(String(selectedMinute).padStart(2,'0'))} ${selectedPeriod}`;
+      timeCustomLabel.textContent = label;
+      timeCustomLabel.classList.remove('text-[var(--ink)]/70');
+      timeCustomLabel.classList.add('text-pink-600', 'font-semibold');
+      timeGrid.querySelectorAll('.choice-card').forEach(c=>c.classList.remove('selected'));
+      state.time = label + ' ⏰';
+      timeNextBtn.disabled = !state.time;
+      closeTimePicker();
+    }
+  }
+
+  const timeClose = document.getElementById('timeClose');
+  function openTimePicker(){ timePickerPanel.classList.remove('hidden'); }
+  function closeTimePicker(){ timePickerPanel.classList.add('hidden'); }
+
+  timeCustomTrigger.addEventListener('click', ()=>{
+    if(timePickerPanel.classList.contains('hidden')) openTimePicker();
+    else closeTimePicker();
+  });
+  timeClose.addEventListener('click', closeTimePicker);
+  document.addEventListener('click', (e)=>{
+    if(timePickerPanel.classList.contains('hidden')) return;
+    if(!timePickerPanel.contains(e.target) && !timeCustomTrigger.contains(e.target)) closeTimePicker();
+  });
 
   timeGrid.addEventListener('click', (e)=>{
     const card = e.target.closest('.choice-card');
@@ -879,24 +1000,17 @@
     timeGrid.querySelectorAll('.choice-card').forEach(c=>c.classList.remove('selected'));
     card.classList.add('selected');
     state.time = card.dataset.value;
-    timeCustom.value = '';
+    // reset custom picker
+    selectedPeriod = null; selectedHour = null; selectedMinute = null;
+    document.querySelectorAll('.ampm-btn').forEach(b=>b.classList.remove('selected'));
+    hourGrid.querySelectorAll('.cal-day').forEach(c=>c.classList.remove('cal-selected'));
+    minuteGrid.querySelectorAll('.cal-day').forEach(c=>c.classList.remove('cal-selected'));
+    timeCustomLabel.textContent = 'یک ساعت دقیق انتخاب کن';
+    timeCustomLabel.classList.add('text-[var(--ink)]/70');
+    timeCustomLabel.classList.remove('text-pink-600', 'font-semibold');
+    closeTimePicker();
     timeNextBtn.disabled = !state.time;
   });
-  timeCustom.addEventListener('input', ()=>{
-    if(timeCustom.value){
-      timeGrid.querySelectorAll('.choice-card').forEach(c=>c.classList.remove('selected'));
-      state.time = formatTime(timeCustom.value) + ' ⏰';
-    } else {
-      state.time = null;
-    }
-    timeNextBtn.disabled = !state.time;
-  });
-  function formatTime(t){
-    const [h,m] = t.split(':').map(Number);
-    const period = h >= 12 ? 'ب.ظ' : 'ق.ظ';
-    const h12 = ((h+11)%12)+1;
-    return `${h12}:${String(m).padStart(2,'0')} ${period}`;
-  }
 
   /* ============================================================
      STEP 5 — love note
